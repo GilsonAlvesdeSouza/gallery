@@ -3,6 +3,7 @@ import * as C from "./App.styles";
 import * as Photos from "./services/photos"
 import { Photo } from "./types/Photo";
 import Loader from "./components/Loader"
+import PhotoItem from "./components/PhotoItem";
 
 
 function App() {
@@ -21,8 +22,8 @@ function App() {
   }, [])
 
   const handlePhotoList = () => {
-    return photos.map((item, index) => <div key={`photoList-${index}`}>{item.name}</div>);
-  };
+    return photos.map((item, index) => <PhotoItem key={`photo-${index}`} item={item}/>);
+  }
 
   return (
     <C.Container>
@@ -48,4 +49,4 @@ function App() {
   )
 }
 
-export default App
+export default App;
