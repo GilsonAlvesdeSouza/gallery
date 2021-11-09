@@ -1,6 +1,7 @@
-import { Photo } from "../types/Photo";
+import { getDownloadURL, listAll, ref, uploadBytes } from 'firebase/storage';
+import { v4 as createId } from "uuid";
 import { storage } from "../libs/firebase";
-import { ref, listAll, getDownloadURL } from 'firebase/storage';
+import { Photo } from "../types/Photo";
 
 export const getAll = async (): Promise<Photo[]> => {
     let list: Photo[] = [];
@@ -17,4 +18,21 @@ export const getAll = async (): Promise<Photo[]> => {
         });
     }
     return list;
+};
+
+export const insert = async (file: File) => {
+    if(["image/jpeg", "image/png", "image/jpg"].includes(file.type) ){
+        let randomName = createId();
+        let newFile = ref(storage, `images/${randomName}`);
+
+        let upload = await uploadBytes(newFile, file);
+        let photoUrl = await getDownloadURL(upload.ref);
+
+        return {
+            name: upload.ref.name,
+            url: photoUrl,
+        } as Photo;
+    }
+
+    return new Error("Formato ou tipo de arquivo não permitido");
 };
